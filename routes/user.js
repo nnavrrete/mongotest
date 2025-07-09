@@ -20,27 +20,27 @@ router.get("/users", async (req, res) => {
     }
 });
 
-router.get("/users/:id", async (req, res) => {
+router.get("/users/:correo", async (req, res) => {
     try {
-        const usuario = await User.findById(req.params.id);
+        const usuario = await User.findOne({ correo: req.params.correo });
         res.status(200).send(usuario);
     } catch (error) {
         res.status(404).send(error);
     }
 });
 
-router.put("/users/:id", async (req, res) => {
+router.put("/users/:correo", async (req, res) => {
     try {
-        const usuario = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const usuario = await User.findOneAndUpdate({ correo: req.params.correo }, req.body, { new: true });
         res.status(200).send(usuario);
     } catch (error) {
         res.status(404).send(error);
     }
 });
 
-router.delete("/users/:id", async (req, res) => {
+router.delete("/users/:correo", async (req, res) => {
     try {
-        await User.findByIdAndDelete(req.params.id);
+        await User.findOneAndDelete({ correo: req.params.correo });
         res.status(200).send({ message: "Usuario eliminado correctamente" });
     } catch (error) {
         res.status(404).send(error);
