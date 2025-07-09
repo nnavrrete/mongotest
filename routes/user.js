@@ -1,7 +1,9 @@
 const router = require('express').Router();
 const User = require('../models/user');
+const { verifyToken } = require('../middleware/jwt');
 
-router.post("/users", async (req, res) => {
+
+router.post("/users", verifyToken, async (req, res) => {
     try {
         const usuario = new User(req.body);
         await usuario.save();
@@ -11,7 +13,7 @@ router.post("/users", async (req, res) => {
     }
 });
 
-router.get("/users", async (req, res) => {
+router.get("/users", verifyToken, async (req, res) => {
     try {
         const usuarios = await User.find();
         res.status(200).send(usuarios);
@@ -20,7 +22,7 @@ router.get("/users", async (req, res) => {
     }
 });
 
-router.get("/users/:correo", async (req, res) => {
+router.get("/users/:correo", verifyToken, async (req, res) => {
     try {
         const usuario = await User.findOne({ correo: req.params.correo });
         res.status(200).send(usuario);
@@ -29,7 +31,7 @@ router.get("/users/:correo", async (req, res) => {
     }
 });
 
-router.put("/users/:correo", async (req, res) => {
+router.put("/users/:correo", verifyToken, async (req, res) => {
     try {
         const usuario = await User.findOneAndUpdate({ correo: req.params.correo }, req.body, { new: true });
         res.status(200).send(usuario);
@@ -38,7 +40,7 @@ router.put("/users/:correo", async (req, res) => {
     }
 });
 
-router.delete("/users/:correo", async (req, res) => {
+router.delete("/users/:correo", verifyToken, async (req, res) => {
     try {
         await User.findOneAndDelete({ correo: req.params.correo });
         res.status(200).send({ message: "Usuario eliminado correctamente" });
